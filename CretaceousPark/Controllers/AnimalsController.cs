@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using CretaceousPark.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CretaceousPark.Controllers
 {
@@ -37,5 +38,22 @@ namespace CretaceousPark.Controllers
     {
         return _db.Animals.FirstOrDefault(entry => entry.AnimalId == id);
     }
+        // PUT api/animals/5 This specifies that we'll determine which animal will be updated based on the id parameter in the URL.
+    [HttpPut("{id}")]
+    public void Put(int id, [FromBody] Animal animal) //we will need to specify the changes we want to make in the body of the API call.
+    {
+        animal.AnimalId = id;
+        _db.Entry(animal).State = EntityState.Modified;
+        _db.SaveChanges();
+    }
+        // DELETE api/animals/5
+    [HttpDelete("{id}")]
+    public void Delete(int id)
+    {
+      var animalToDelete = _db.Animals.FirstOrDefault(entry => entry.AnimalId == id);
+      _db.Animals.Remove(animalToDelete);
+      _db.SaveChanges();
+    }
   }
+
 }
